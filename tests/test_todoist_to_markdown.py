@@ -46,16 +46,16 @@ class TestFormatTaskMarkdown:
         task.description = "Task description"
 
         comments = []
+        url = "https://app.todoist.com/app/task/test-123"
+        result = format_task_markdown(task, comments, url)
 
-        result = format_task_markdown(task, comments)
+        expected = """# Test Task
 
-        expected = """```
-# Test Task
+Original: https://app.todoist.com/app/task/test-123
 
 Project: project123
 
-Task description
-```"""
+Task description"""
         assert result == expected
 
     def test_format_task_with_comments(self):
@@ -73,11 +73,12 @@ Task description
         comment2.content = "Second comment"
 
         comments = [comment1, comment2]
+        url = "https://app.todoist.com/app/task/test-123"
+        result = format_task_markdown(task, comments, url)
 
-        result = format_task_markdown(task, comments)
+        expected = """# Test Task
 
-        expected = """```
-# Test Task
+Original: https://app.todoist.com/app/task/test-123
 
 Project: project123
 
@@ -89,8 +90,7 @@ First comment
 
 ## 2025-06-14
 
-Second comment
-```"""
+Second comment"""
         assert result == expected
 
     def test_format_task_no_description(self):
@@ -100,14 +100,14 @@ Second comment
         task.description = None
 
         comments = []
+        url = "https://app.todoist.com/app/task/test-123"
+        result = format_task_markdown(task, comments, url)
 
-        result = format_task_markdown(task, comments)
+        expected = """# Test Task
 
-        expected = """```
-# Test Task
+Original: https://app.todoist.com/app/task/test-123
 
-Project: project123
-```"""
+Project: project123"""
         assert result == expected
 
     def test_format_task_no_project(self):
@@ -117,14 +117,14 @@ Project: project123
         task.description = "Task description"
 
         comments = []
+        url = "https://app.todoist.com/app/task/test-123"
+        result = format_task_markdown(task, comments, url)
 
-        result = format_task_markdown(task, comments)
+        expected = """# Test Task
 
-        expected = """```
-# Test Task
+Original: https://app.todoist.com/app/task/test-123
 
-Task description
-```"""
+Task description"""
         assert result == expected
 
 
@@ -154,11 +154,13 @@ class TestMainCLI:
         mock_api.get_comments.return_value = [mock_comment]
 
         runner = CliRunner()
+        url = "https://app.todoist.com/app/task/test-123"
         with patch.dict("os.environ", {"TODOIST_API_KEY": "test-token"}):
-            result = runner.invoke(main, ["https://app.todoist.com/app/task/test-123"])
+            result = runner.invoke(main, [url])
 
         assert result.exit_code == 0
         assert "# Test Task" in result.output
+        assert "Original: https://app.todoist.com/app/task/test-123" in result.output
         assert "Project: project123" in result.output
         assert "Test description" in result.output
         assert "## 2025-06-13" in result.output

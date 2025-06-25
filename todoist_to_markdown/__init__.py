@@ -29,20 +29,16 @@ def extract_task_id(url: str) -> str:
         return full_slug
 
 
-def format_task_markdown(task, comments: list) -> str:
-    """Format task and comments into markdown template."""
-    lines = ["```"]
-    lines.append(f"# {task.content}")
+def format_task_markdown(task, comments: list, url: str) -> str:
+    lines = [f"# {task.content}", ""]
+    lines.append(f"Original: {url}")
     lines.append("")
-
     if task.project_id:
         lines.append(f"Project: {task.project_id}")
-
     if task.description:
         if task.project_id:
             lines.append("")
         lines.append(task.description)
-
     for comment in comments:
         lines.append("")
         try:
@@ -50,15 +46,10 @@ def format_task_markdown(task, comments: list) -> str:
             comment_date = instant.format_common_iso()[:10]
         except Exception as e:
             log.debug("date parsing error for comment: %s", str(e))
-            # Fallback to raw date or current date
-            comment_date = (
-                str(comment.posted_at)[:10] if comment.posted_at else "unknown"
-            )
+            comment_date = str(comment.posted_at)[:10] if comment.posted_at else "unknown"
         lines.append(f"## {comment_date}")
         lines.append("")
         lines.append(comment.content)
-
-    lines.append("```")
     return "\n".join(lines)
 
 
@@ -77,12 +68,14 @@ def main(url: str):
         api = TodoistAPI(api_token)
 
         task = api.get_task(task_id)
-        # get_comments returns Iterator[list[Comment]], so we need to flatten it
+        comments_raw = list(api.get_comments(task_id=task_id))
         comments = []
-        for comment_list in api.get_comments(task_id=task_id):
-            comments.extend(comment_list)
-
-        markdown = format_task_markdown(task, comments)
+        for c in comments_raw:
+            if isinstance(c, list):
+                comments.extend(c)
+            else:
+                comments.append(c)
+        markdown = format_task_markdown(task, comments, url)
         click.echo(markdown)
 
     except Exception as e:
