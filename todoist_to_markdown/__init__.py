@@ -77,7 +77,10 @@ def main(url: str):
         api = TodoistAPI(api_token)
 
         task = api.get_task(task_id)
-        comments = list(api.get_comments(task_id=task_id))
+        # get_comments returns Iterator[list[Comment]], so we need to flatten it
+        comments = []
+        for comment_list in api.get_comments(task_id=task_id):
+            comments.extend(comment_list)
 
         markdown = format_task_markdown(task, comments)
         click.echo(markdown)
