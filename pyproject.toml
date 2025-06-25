@@ -1,15 +1,19 @@
 [project]
 name = "todoist-to-markdown"
 version = "0.1.1"
-description = ""
-keywords = []
+description = "Convert a Todoist task (and its comments) to a clean, readable markdown format from the command line."
+keywords = [
+    "todoist",
+    "markdown",
+    "cli",
+    "export",
+    "tasks",
+    "comments",
+    "productivity",
+]
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = [
-    "todoist-api-python",
-    "click",
-    "whenever",
-]
+dependencies = ["todoist-api-python", "click", "whenever"]
 authors = [{ name = "Michael Bianco", email = "mike@mikebian.co" }]
 urls = { "Repository" = "https://github.com/iloveitaly/todoist-to-markdown" }
 
