@@ -1,37 +1,40 @@
 # Todoist to Markdown
 
-Convert Todoist tasks to markdown format.
+Convert a Todoist task to markdown format.
+
+This tool was completely AI generated. I didn't write any code although I did use [some fancy rules](https://github.com/iloveitaly/llm-ide-prompts)
+and a [package starter template](https://github.com/iloveitaly/python-package-template).
 
 ## Usage
 
 1. Set your Todoist API token:
 
 ```bash
-export TODOIST_API_TOKEN="your_api_token_here"
+export TODOIST_API_KEY="your_api_token_here"
 ```
 
 1. Run the tool with a Todoist task URL:
 
 ```bash
-todoist-to-markdown https://app.todoist.com/app/task/family-critique-6WHj3H6XmQ6F5HJJ
+todoist-to-markdown https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
 ```
 
-## Output Format
+The tool will output the task and its comments in markdown format.
 
-The tool outputs tasks and comments in this markdown template format:
+## Example Output
 
 ```markdown
-# TASK_NAME
+# Family Notes
 
-Project: PROJECT_NAME
+Project: Personal
 
-TASK_DESCRIPTION
+Review the family photos and provide feedback on composition and lighting.
 
-## DATE_OF_FIRST_COMMENT
+## 2025-06-13
 
-COMMENT_DESCRIPTION
+Initial thoughts: The composition looks good but we need better lighting.
 
-## DATE_OF_NEXT_COMMENT
+## 2025-06-14
 
-COMMENT_DESCRIPTION
+Added some suggestions for the next photo session.
 ```
