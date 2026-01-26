@@ -241,16 +241,16 @@ wheels = [
 
 [[package]]
 name = "todoist-api-python"
-version = "3.2.0"
+version = "3.2.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "annotated-types" },
     { name = "dataclass-wizard" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d5/ec/74132dd24c048db4697ac25b5ada74336360c3325780d4226c6a8b4d8e03/todoist_api_python-3.2.0.tar.gz", hash = "sha256:442473921e283a2636a7896c3b2422938e299e3684e2979e5a467e8a239ff41a", size = 20690, upload-time = "2026-01-16T19:05:17.092Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/6e/1ff0e0e098f2196f6eda3f20ebe0653a978abee5345f5ed1dfd1a9b5bbdc/todoist_api_python-3.2.1.tar.gz", hash = "sha256:22c60230cc616437846f9a6469dddd97548545ef916d2bea98b2ca2f522d92f9", size = 20689, upload-time = "2026-01-22T17:07:13.254Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7a/4d/6d10d2c7734b4e801b3c0599de060444e3dae7a131b61891d3860567b0a1/todoist_api_python-3.2.0-py3-none-any.whl", hash = "sha256:f167bdcb2fb11f8970930ca466a3da92ee8e19a76df31418528c96564683f226", size = 23535, upload-time = "2026-01-16T19:05:14.986Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/7c/6baa538db710f8d9cc4ed15f1f757ab9bc8564941d9c3291b9d7fcee7746/todoist_api_python-3.2.1-py3-none-any.whl", hash = "sha256:1091e9b557291380abd79245efe961b0f2261c7b4eb16e52beccfc6357320e95", size = 23541, upload-time = "2026-01-22T17:07:12.311Z" },
 ]
 
 [[package]]
