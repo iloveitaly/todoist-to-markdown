@@ -4,13 +4,6 @@ setup:
     uv venv && uv sync
     @echo "activate: source ./.venv/bin/activate"
 
-# Start docker services
-docker_up:
-    docker compose up -d --wait
-
-docker_down:
-	docker compose down
-
 # Run tests
 test:
     uv run pytest -v
