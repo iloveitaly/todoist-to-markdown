@@ -42,15 +42,21 @@ uv tool install todoist-to-markdown
 ```markdown
 # Family Notes
 
-Project: Personal
+**Original:** https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
+**Project:** Personal
+**Section:** Planning
+
+## Description
 
 Review the family photos and provide feedback on composition and lighting.
 
-## 2025-06-13
+## Comments
+
+### 2025-06-13 10:30
 
 Initial thoughts: The composition looks good but we need better lighting.
 
-## 2025-06-14
+### 2025-06-14 15:45
 
 Added some suggestions for the next photo session.
 ```

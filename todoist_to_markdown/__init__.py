@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 
 def extract_task_id(url: str) -> str:
     """Extract task ID from Todoist URL.
-    
+
     Supports:
     - https://app.todoist.com/app/task/slug-ID
     - https://todoist.com/showTask?id=ID
@@ -80,7 +80,9 @@ def format_task_markdown(
                 comment_date = instant.format_iso()[:16].replace("T", " ")
             except Exception as e:
                 log.debug("date parsing error for comment: %s", str(e))
-                comment_date = str(comment.posted_at) if comment.posted_at else "unknown date"
+                comment_date = (
+                    str(comment.posted_at) if comment.posted_at else "unknown date"
+                )
 
             lines.append(f"### {comment_date}")
             lines.append("")

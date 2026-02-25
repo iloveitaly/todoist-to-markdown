@@ -19,7 +19,9 @@ class TestExtractTaskId:
         assert result == "6WHj3H6XmQ6F5HJJ"
 
     def test_extract_task_id_with_fragment(self):
-        url = "https://app.todoist.com/app/task/family-critique-6WHj3H6XmQ6F5HJJ#section"
+        url = (
+            "https://app.todoist.com/app/task/family-critique-6WHj3H6XmQ6F5HJJ#section"
+        )
         result = extract_task_id(url)
         assert result == "6WHj3H6XmQ6F5HJJ"
 
