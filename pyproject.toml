@@ -1,6 +1,6 @@
 [project]
 name = "todoist-to-md"
-version = "0.1.2"
+version = "0.1.3"
 description = "Convert a Todoist task (and its comments) to a clean, readable markdown format from the command line."
 keywords = [
     "todoist",
