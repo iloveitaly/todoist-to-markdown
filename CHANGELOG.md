@@ -1,3 +1,12 @@
+# Changelog
+
+## [0.1.2](https://github.com/iloveitaly/todoist-to-markdown/compare/v0.1.1...v0.1.2) (2026-02-25)
+
+
+### Documentation
+
+* clarify markdown sample for comments and metadata ([bd33e6b](https://github.com/iloveitaly/todoist-to-markdown/commit/bd33e6bc7437d918f48b43c81cd6c8df8bbad852))
+
 ## 0.1.1 (2025-06-25)
 
 
@@ -10,6 +19,3 @@
 ### Reverts
 
 * Revert "refactor: simplify comment retrieval and format dependencies" ([302ee01](https://github.com/iloveitaly/todoist-to-markdown/commit/302ee01b63fed18984438154f6084d48b3bf7770))
-
-
-
