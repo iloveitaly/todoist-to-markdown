@@ -3,7 +3,7 @@
 ![GitHub CI Status](https://github.com/iloveitaly/todoist-to-md/actions/workflows/build_and_publish.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Todoist to Markdown
+# Todoist Task to Markdown
 
 Convert a Todoist task (and its comments) into a clean, readable Markdown format. Perfect for archiving tasks or migrating notes.
 
