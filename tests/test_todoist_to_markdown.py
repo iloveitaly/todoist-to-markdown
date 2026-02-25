@@ -24,13 +24,18 @@ class TestExtractTaskId:
         assert result == "6WHj3H6XmQ6F5HJJ"
 
     def test_extract_task_id_invalid_url(self):
-        with pytest.raises(ValueError, match="invalid todoist task url format"):
+        with pytest.raises(ValueError, match="Invalid Todoist task URL format"):
             extract_task_id("https://example.com/not-a-task")
 
     def test_extract_task_id_no_dashes(self):
         url = "https://app.todoist.com/app/task/6WHj3H6XmQ6F5HJJ"
         result = extract_task_id(url)
         assert result == "6WHj3H6XmQ6F5HJJ"
+
+    def test_extract_task_id_query_param(self):
+        url = "https://todoist.com/showTask?id=123456789"
+        result = extract_task_id(url)
+        assert result == "123456789"
 
 
 class TestFormatTaskMarkdown:

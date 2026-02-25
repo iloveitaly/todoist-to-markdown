@@ -5,32 +5,37 @@
 
 # Todoist to Markdown
 
-Convert a Todoist task to markdown format.
+Convert a Todoist task (and its comments) into a clean, readable Markdown format. Perfect for archiving tasks or migrating notes.
 
-This tool was completely AI generated. I didn't write any code although I did use [some fancy rules](https://github.com/iloveitaly/llm-ide-prompts)
-and a [package starter template](https://github.com/iloveitaly/python-package-template).
+This tool was completely AI-generated. I didn't write any code, although I did use [some fancy rules](https://github.com/iloveitaly/llm-ide-prompts) and a [package starter template](https://github.com/iloveitaly/python-package-template).
 
 ## Installation
 
 ```bash
-uv add todoist-to-markdown
+uv tool install todoist-to-markdown
 ```
 
 ## Usage
 
-1. Set your Todoist API token:
+1. **Set your Todoist API token:**
 
-```bash
-export TODOIST_API_KEY="your_api_token_here"
-```
+   You can find your API token in the [Todoist Integrations settings](https://todoist.com/app/settings/integrations).
 
-1. Run the tool with a Todoist task URL:
+   ```bash
+   export TODOIST_API_KEY="your_api_token_here"
+   ```
 
-```bash
-todoist-to-markdown https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
-```
+2. **Run the tool with a Todoist task URL:**
 
-The tool will output the task and its comments in markdown format.
+   ```bash
+   todoist-to-markdown https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
+   ```
+
+3. **Save output to a file:**
+
+   ```bash
+   todoist-to-markdown https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ --output task.md
+   ```
 
 ## Example Output
 

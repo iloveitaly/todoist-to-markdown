@@ -4,37 +4,40 @@ import re
 from typing import Optional
 
 import click
-from rich.console import Console
-from rich.logging import RichHandler
 from todoist_api_python.api import TodoistAPI
 from whenever import Instant
 
-# Set up rich logging
+# Set up standard logging
 logging.basicConfig(
     level=os.environ.get("LOG_LEVEL", "INFO").upper(),
-    format="%(message)s",
-    datefmt="[%X]",
-    handlers=[RichHandler(rich_tracebacks=True)],
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
 log = logging.getLogger(__name__)
-console = Console()
 
 
 def extract_task_id(url: str) -> str:
-    """Extract task ID from Todoist URL."""
-    # Pattern: https://app.todoist.com/app/task/family-critique-6WHj3H6XmQ6F5HJJ
-    # The task ID is the part after the last dash
+    """Extract task ID from Todoist URL.
+    
+    Supports:
+    - https://app.todoist.com/app/task/slug-ID
+    - https://todoist.com/showTask?id=ID
+    - https://todoist.com/app/task/ID
+    """
+    # Standard app URL: /task/slug-ID or /task/ID
     match = re.search(r"/task/([^/?#]+)", url)
-    if not match:
-        raise ValueError("invalid todoist task url format")
-
-    full_slug = match.group(1)
-    # Extract the task ID from the slug (part after the last dash)
-    if "-" in full_slug:
-        return full_slug.split("-")[-1]
-    else:
+    if match:
+        full_slug = match.group(1)
+        if "-" in full_slug:
+            return full_slug.split("-")[-1]
         return full_slug
+
+    # Legacy or alternative URL: showTask?id=ID
+    query_match = re.search(r"id=(\d+)", url)
+    if query_match:
+        return query_match.group(1)
+
+    raise ValueError(f"Invalid Todoist task URL format: {url}")
 
 
 def format_task_markdown(
@@ -73,8 +76,8 @@ def format_task_markdown(
         for comment in comments:
             lines.append("")
             try:
-                instant = Instant.parse_common_iso(comment.posted_at)
-                comment_date = instant.format_common_iso()[:16].replace("T", " ")
+                instant = Instant.parse_iso(comment.posted_at)
+                comment_date = instant.format_iso()[:16].replace("T", " ")
             except Exception as e:
                 log.debug("date parsing error for comment: %s", str(e))
                 comment_date = str(comment.posted_at) if comment.posted_at else "unknown date"
@@ -143,7 +146,7 @@ def main(url: str, output: Optional[str] = None):
         if output:
             with open(output, "w") as f:
                 f.write(markdown)
-            console.print(f"[green]Successfully saved markdown to {output}[/green]")
+            click.echo(f"Successfully saved markdown to {output}")
         else:
             click.echo(markdown)
 
