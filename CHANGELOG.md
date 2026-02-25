@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/iloveitaly/todoist-to-markdown/compare/v0.1.2...v0.1.3) (2026-02-25)
+
+
+### Bug Fixes
+
+* lets release on pypi ([834adae](https://github.com/iloveitaly/todoist-to-markdown/commit/834adae6a27b0240cec91e3f92c87420345aa703))
+
 ## [0.1.2](https://github.com/iloveitaly/todoist-to-md/compare/v0.1.1...v0.1.2) (2026-02-25)
 
 
