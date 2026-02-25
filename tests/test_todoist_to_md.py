@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 import pytest
 from click.testing import CliRunner
 
-from todoist_to_markdown import extract_task_id, format_task_markdown, main
+from todoist_to_md import extract_task_id, format_task_markdown, main
 
 
 class TestExtractTaskId:
@@ -94,7 +94,7 @@ class TestMainCLI:
             assert result.exit_code != 0
             assert "TODOIST_API_KEY environment variable required" in result.output
 
-    @patch("todoist_to_markdown.TodoistAPI")
+    @patch("todoist_to_md.TodoistAPI")
     def test_main_success(self, mock_api_class):
         mock_api = Mock()
         mock_api_class.return_value = mock_api
@@ -131,7 +131,7 @@ class TestMainCLI:
         assert "**Section:** Real Section Name" in result.output
         assert "Test comment" in result.output
 
-    @patch("todoist_to_markdown.TodoistAPI")
+    @patch("todoist_to_md.TodoistAPI")
     def test_main_output_file(self, mock_api_class, tmp_path):
         mock_api = Mock()
         mock_api_class.return_value = mock_api

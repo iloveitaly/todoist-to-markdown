@@ -1,5 +1,5 @@
 [project]
-name = "todoist-to-markdown"
+name = "todoist-to-md"
 version = "0.1.2"
 description = "Convert a Todoist task (and its comments) to a clean, readable markdown format from the command line."
 keywords = [
@@ -15,11 +15,11 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["todoist-api-python", "click", "whenever"]
 authors = [{ name = "Michael Bianco", email = "mike@mikebian.co" }]
-urls = { "Repository" = "https://github.com/iloveitaly/todoist-to-markdown" }
+urls = { "Repository" = "https://github.com/iloveitaly/todoist-to-md" }
 
 # additional packaging information: https://packaging.python.org/en/latest/specifications/core-metadata/#license
 [project.scripts]
-todoist-to-markdown = "todoist_to_markdown:main"
+todoist-to-md = "todoist_to_md:main"
 
 [build-system]
 requires = ["uv_build>=0.10.0"]
@@ -47,7 +47,7 @@ addopts = "--cov --cov-report=term-missing --cov-report=html:tmp/htmlcov"
 
 [tool.coverage.run]
 plugins = ["covdefaults"]
-source = ["todoist_to_markdown"]
+source = ["todoist_to_md"]
 
 [tool.coverage.report]
 fail_under = 50

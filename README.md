@@ -1,6 +1,6 @@
-[![Release Notes](https://img.shields.io/github/release/iloveitaly/todoist-to-markdown)](https://github.com/iloveitaly/todoist-to-markdown/releases)
-[![Downloads](https://static.pepy.tech/badge/todoist-to-markdown/month)](https://pepy.tech/project/todoist-to-markdown)
-![GitHub CI Status](https://github.com/iloveitaly/todoist-to-markdown/actions/workflows/build_and_publish.yml/badge.svg)
+[![Release Notes](https://img.shields.io/github/release/iloveitaly/todoist-to-md)](https://github.com/iloveitaly/todoist-to-md/releases)
+[![Downloads](https://static.pepy.tech/badge/todoist-to-md/month)](https://pepy.tech/project/todoist-to-md)
+![GitHub CI Status](https://github.com/iloveitaly/todoist-to-md/actions/workflows/build_and_publish.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Todoist to Markdown
@@ -12,7 +12,7 @@ This tool was completely AI-generated. I didn't write any code, although I did u
 ## Installation
 
 ```bash
-uv tool install todoist-to-markdown
+uv tool install todoist-to-md
 ```
 
 ## Usage
@@ -28,13 +28,13 @@ uv tool install todoist-to-markdown
 2. **Run the tool with a Todoist task URL:**
 
    ```bash
-   todoist-to-markdown https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
+   todoist-to-md https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
    ```
 
 3. **Save output to a file:**
 
    ```bash
-   todoist-to-markdown https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ --output task.md
+   todoist-to-md https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ --output task.md
    ```
 
 ## Example Output
