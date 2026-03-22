@@ -21,21 +21,30 @@ def is_project_url(url: str) -> bool:
     return "app.todoist.com" in url and "/project/" in url
 
 
+def _extract_slug_id(path_segment: str) -> str:
+    """Extract the ID from a URL path slug (part after the last dash)."""
+    if "-" in path_segment:
+        return path_segment.split("-")[-1]
+    return path_segment
+
+
 def extract_project_id(url: str) -> str:
     """Extract project ID from Todoist project URL.
 
     Supports:
     - https://app.todoist.com/app/project/slug-ID
     - https://app.todoist.com/app/project/ID
+    - https://todoist.com/showProject?id=ID
     """
     match = re.search(r"/project/([^/?#]+)", url)
-    if not match:
-        raise ValueError(f"Invalid Todoist project URL format: {url}")
+    if match:
+        return _extract_slug_id(match.group(1))
 
-    full_slug = match.group(1)
-    if "-" in full_slug:
-        return full_slug.split("-")[-1]
-    return full_slug
+    query_match = re.search(r"id=(\d+)", url)
+    if query_match:
+        return query_match.group(1)
+
+    raise ValueError(f"Invalid Todoist project URL format: {url}")
 
 
 def extract_task_id(url: str) -> str:
@@ -46,20 +55,25 @@ def extract_task_id(url: str) -> str:
     - https://todoist.com/showTask?id=ID
     - https://todoist.com/app/task/ID
     """
-    # Standard app URL: /task/slug-ID or /task/ID
     match = re.search(r"/task/([^/?#]+)", url)
     if match:
-        full_slug = match.group(1)
-        if "-" in full_slug:
-            return full_slug.split("-")[-1]
-        return full_slug
+        return _extract_slug_id(match.group(1))
 
-    # Legacy or alternative URL: showTask?id=ID
     query_match = re.search(r"id=(\d+)", url)
     if query_match:
         return query_match.group(1)
 
     raise ValueError(f"Invalid Todoist task URL format: {url}")
+
+
+def _format_comment_date(posted_at: str) -> str:
+    """Parse and format a comment's posted_at timestamp to 'YYYY-MM-DD HH:MM'."""
+    try:
+        instant = Instant.parse_iso(posted_at)
+        return instant.format_iso()[:16].replace("T", " ")
+    except Exception as e:
+        log.debug("date parsing error for comment: %s", str(e))
+        return str(posted_at) if posted_at else "unknown date"
 
 
 def format_task_markdown(
@@ -97,16 +111,7 @@ def format_task_markdown(
         lines.append("## Comments")
         for comment in comments:
             lines.append("")
-            try:
-                instant = Instant.parse_iso(comment.posted_at)
-                comment_date = instant.format_iso()[:16].replace("T", " ")
-            except Exception as e:
-                log.debug("date parsing error for comment: %s", str(e))
-                comment_date = (
-                    str(comment.posted_at) if comment.posted_at else "unknown date"
-                )
-
-            lines.append(f"### {comment_date}")
+            lines.append(f"### {_format_comment_date(comment.posted_at)}")
             lines.append("")
             lines.append(comment.content)
 
@@ -132,15 +137,7 @@ def format_project_markdown(project, tasks_with_comments: list, url: str) -> str
 
         if comments:
             for comment in comments:
-                try:
-                    instant = Instant.parse_iso(comment.posted_at)
-                    comment_date = instant.format_iso()[:16].replace("T", " ")
-                except Exception as e:
-                    log.debug("date parsing error for comment: %s", str(e))
-                    comment_date = (
-                        str(comment.posted_at) if comment.posted_at else "unknown date"
-                    )
-                lines.append(f"### {comment_date}")
+                lines.append(f"### {_format_comment_date(comment.posted_at)}")
                 lines.append("")
                 lines.append(comment.content)
                 lines.append("")
