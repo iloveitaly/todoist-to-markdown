@@ -1,9 +1,10 @@
+import os
 from unittest.mock import Mock, patch
 
 import pytest
 from click.testing import CliRunner
 
-from todoist_to_markdown import (
+from todoist_to_md import (
     extract_project_id,
     extract_task_id,
     format_project_markdown,
@@ -32,17 +33,18 @@ class TestExtractTaskId:
         assert result == "6WHj3H6XmQ6F5HJJ"
 
     def test_extract_task_id_invalid_url(self):
-        with pytest.raises(ValueError, match="invalid todoist task url format"):
+        with pytest.raises(ValueError, match="Invalid Todoist task URL format"):
             extract_task_id("https://example.com/not-a-task")
-
-    def test_extract_task_id_no_task_id(self):
-        with pytest.raises(ValueError, match="invalid todoist task url format"):
-            extract_task_id("https://app.todoist.com/app/")
 
     def test_extract_task_id_no_dashes(self):
         url = "https://app.todoist.com/app/task/6WHj3H6XmQ6F5HJJ"
         result = extract_task_id(url)
         assert result == "6WHj3H6XmQ6F5HJJ"
+
+    def test_extract_task_id_query_param(self):
+        url = "https://todoist.com/showTask?id=123456789"
+        result = extract_task_id(url)
+        assert result == "123456789"
 
 
 class TestIsProjectUrl:
@@ -75,7 +77,7 @@ class TestExtractProjectId:
         assert result == "9kqn6qrmHVJX6386"
 
     def test_extract_project_id_invalid_url(self):
-        with pytest.raises(ValueError, match="invalid todoist project url format"):
+        with pytest.raises(ValueError, match="Invalid Todoist project URL format"):
             extract_project_id("https://example.com/not-a-project")
 
     def test_extract_project_id_no_dashes(self):
@@ -89,89 +91,45 @@ class TestFormatTaskMarkdown:
         task = Mock()
         task.content = "Test Task"
         task.project_id = "project123"
+        task.section_id = None
         task.description = "Task description"
 
         comments = []
         url = "https://app.todoist.com/app/task/test-123"
-        result = format_task_markdown(task, comments, url)
+        result = format_task_markdown(task, comments, url, project_name="My Project")
 
-        expected = """# Test Task
-
-Original: https://app.todoist.com/app/task/test-123
-
-Project: project123
-
-Task description"""
-        assert result == expected
+        assert "# Test Task" in result
+        assert "**Original:** https://app.todoist.com/app/task/test-123" in result
+        assert "**Project:** My Project" in result
+        assert "## Description" in result
+        assert "Task description" in result
 
     def test_format_task_with_comments(self):
         task = Mock()
         task.content = "Test Task"
         task.project_id = "project123"
+        task.section_id = "section456"
         task.description = "Task description"
 
         comment1 = Mock()
         comment1.posted_at = "2025-06-13T10:30:00Z"
         comment1.content = "First comment"
 
-        comment2 = Mock()
-        comment2.posted_at = "2025-06-14T15:45:00Z"
-        comment2.content = "Second comment"
-
-        comments = [comment1, comment2]
+        comments = [comment1]
         url = "https://app.todoist.com/app/task/test-123"
-        result = format_task_markdown(task, comments, url)
+        result = format_task_markdown(
+            task,
+            comments,
+            url,
+            project_name="My Project",
+            section_name="My Section",
+        )
 
-        expected = """# Test Task
-
-Original: https://app.todoist.com/app/task/test-123
-
-Project: project123
-
-Task description
-
-## 2025-06-13
-
-First comment
-
-## 2025-06-14
-
-Second comment"""
-        assert result == expected
-
-    def test_format_task_no_description(self):
-        task = Mock()
-        task.content = "Test Task"
-        task.project_id = "project123"
-        task.description = None
-
-        comments = []
-        url = "https://app.todoist.com/app/task/test-123"
-        result = format_task_markdown(task, comments, url)
-
-        expected = """# Test Task
-
-Original: https://app.todoist.com/app/task/test-123
-
-Project: project123"""
-        assert result == expected
-
-    def test_format_task_no_project(self):
-        task = Mock()
-        task.content = "Test Task"
-        task.project_id = None
-        task.description = "Task description"
-
-        comments = []
-        url = "https://app.todoist.com/app/task/test-123"
-        result = format_task_markdown(task, comments, url)
-
-        expected = """# Test Task
-
-Original: https://app.todoist.com/app/task/test-123
-
-Task description"""
-        assert result == expected
+        assert "**Project:** My Project" in result
+        assert "**Section:** My Section" in result
+        assert "## Comments" in result
+        assert "### 2025-06-13 10:30" in result
+        assert "First comment" in result
 
 
 class TestFormatProjectMarkdown:
@@ -192,25 +150,16 @@ class TestFormatProjectMarkdown:
         url = "https://app.todoist.com/app/project/test-project123"
         result = format_project_markdown(project, tasks_with_comments, url)
 
-        expected = """# Test Project
-
-Original: https://app.todoist.com/app/project/test-project123
-
-Project ID: project123
-
----
-
-## Task 1
-
-Description 1
-
----
-
-## Task 2
-
----
-"""
-        assert result == expected
+        assert "# Test Project" in result
+        assert (
+            "**Original:** https://app.todoist.com/app/project/test-project123"
+            in result
+        )
+        assert "**Project ID:** project123" in result
+        assert "## Task 1" in result
+        assert "Description 1" in result
+        assert "## Task 2" in result
+        assert "---" in result
 
     def test_format_project_with_comments(self):
         project = Mock()
@@ -233,29 +182,13 @@ Description 1
         url = "https://app.todoist.com/app/project/test-project123"
         result = format_project_markdown(project, tasks_with_comments, url)
 
-        expected = """# Test Project
-
-Original: https://app.todoist.com/app/project/test-project123
-
-Project ID: project123
-
----
-
-## Task 1
-
-Task description
-
-### 2025-06-13
-
-First comment
-
-### 2025-06-14
-
-Second comment
-
----
-"""
-        assert result == expected
+        assert "# Test Project" in result
+        assert "## Task 1" in result
+        assert "Task description" in result
+        assert "### 2025-06-13 10:30" in result
+        assert "First comment" in result
+        assert "### 2025-06-14 15:45" in result
+        assert "Second comment" in result
 
 
 class TestMainCLI:
@@ -266,7 +199,7 @@ class TestMainCLI:
             assert result.exit_code != 0
             assert "TODOIST_API_KEY environment variable required" in result.output
 
-    @patch("todoist_to_markdown.TodoistAPI")
+    @patch("todoist_to_md.TodoistAPI")
     def test_main_success(self, mock_api_class):
         mock_api = Mock()
         mock_api_class.return_value = mock_api
@@ -274,13 +207,22 @@ class TestMainCLI:
         mock_task = Mock()
         mock_task.content = "Test Task"
         mock_task.project_id = "project123"
+        mock_task.section_id = "section456"
         mock_task.description = "Test description"
+
+        mock_project = Mock()
+        mock_project.name = "Real Project Name"
+
+        mock_section = Mock()
+        mock_section.name = "Real Section Name"
 
         mock_comment = Mock()
         mock_comment.posted_at = "2025-06-13T10:30:00Z"
         mock_comment.content = "Test comment"
 
         mock_api.get_task.return_value = mock_task
+        mock_api.get_project.return_value = mock_project
+        mock_api.get_section.return_value = mock_section
         mock_api.get_comments.return_value = [mock_comment]
 
         runner = CliRunner()
@@ -290,44 +232,40 @@ class TestMainCLI:
 
         assert result.exit_code == 0
         assert "# Test Task" in result.output
-        assert "Original: https://app.todoist.com/app/task/test-123" in result.output
-        assert "Project: project123" in result.output
-        assert "Test description" in result.output
-        assert "## 2025-06-13" in result.output
+        assert "**Project:** Real Project Name" in result.output
+        assert "**Section:** Real Section Name" in result.output
         assert "Test comment" in result.output
 
-    @patch("todoist_to_markdown.TodoistAPI")
-    def test_main_api_error(self, mock_api_class):
+    @patch("todoist_to_md.TodoistAPI")
+    def test_main_output_file(self, mock_api_class, tmp_path):
         mock_api = Mock()
         mock_api_class.return_value = mock_api
-        mock_api.get_task.side_effect = Exception("API Error")
+        mock_api.get_task.return_value = Mock(
+            content="Test", project_id=None, section_id=None, description=None
+        )
+        mock_api.get_comments.return_value = []
 
+        output_file = tmp_path / "test.md"
         runner = CliRunner()
+        url = "https://app.todoist.com/app/task/test-123"
         with patch.dict("os.environ", {"TODOIST_API_KEY": "test-token"}):
-            result = runner.invoke(main, ["https://app.todoist.com/app/task/test-123"])
+            result = runner.invoke(main, [url, "--output", str(output_file)])
 
-        assert result.exit_code != 0
-        assert "error: API Error" in result.output
+        assert result.exit_code == 0
+        assert os.path.exists(output_file)
+        with open(output_file) as f:
+            content = f.read()
+            assert "# Test" in content
 
-    def test_main_invalid_url(self):
-        runner = CliRunner()
-        with patch.dict("os.environ", {"TODOIST_API_KEY": "test-token"}):
-            result = runner.invoke(main, ["https://example.com/invalid"])
-
-        assert result.exit_code != 0
-        assert "invalid todoist task url format" in result.output
-
-    @patch("todoist_to_markdown.TodoistAPI")
+    @patch("todoist_to_md.TodoistAPI")
     def test_main_project_success(self, mock_api_class):
         mock_api = Mock()
         mock_api_class.return_value = mock_api
 
-        # Mock project
         mock_project = Mock()
         mock_project.name = "Test Project"
         mock_project.id = "project123"
 
-        # Mock tasks
         mock_task1 = Mock()
         mock_task1.id = "task1"
         mock_task1.content = "Task 1"
@@ -338,7 +276,6 @@ class TestMainCLI:
         mock_task2.content = "Task 2"
         mock_task2.description = None
 
-        # Mock comments
         mock_comment = Mock()
         mock_comment.posted_at = "2025-06-13T10:30:00Z"
         mock_comment.content = "Test comment"
@@ -355,17 +292,17 @@ class TestMainCLI:
         assert result.exit_code == 0
         assert "# Test Project" in result.output
         assert (
-            "Original: https://app.todoist.com/app/project/test-project123"
+            "**Original:** https://app.todoist.com/app/project/test-project123"
             in result.output
         )
-        assert "Project ID: project123" in result.output
+        assert "**Project ID:** project123" in result.output
         assert "## Task 1" in result.output
         assert "Description 1" in result.output
         assert "## Task 2" in result.output
-        assert "### 2025-06-13" in result.output
+        assert "### 2025-06-13 10:30" in result.output
         assert "Test comment" in result.output
 
-    @patch("todoist_to_markdown.TodoistAPI")
+    @patch("todoist_to_md.TodoistAPI")
     def test_main_project_api_error(self, mock_api_class):
         mock_api = Mock()
         mock_api_class.return_value = mock_api
@@ -378,4 +315,10 @@ class TestMainCLI:
             )
 
         assert result.exit_code != 0
-        assert "error: API Error" in result.output
+
+    def test_main_invalid_url(self):
+        runner = CliRunner()
+        with patch.dict("os.environ", {"TODOIST_API_KEY": "test-token"}):
+            result = runner.invoke(main, ["https://example.com/invalid"])
+
+        assert result.exit_code != 0

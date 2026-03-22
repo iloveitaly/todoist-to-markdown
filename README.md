@@ -1,40 +1,66 @@
-# Todoist to Markdown
+[![Release Notes](https://img.shields.io/github/release/iloveitaly/todoist-to-md)](https://github.com/iloveitaly/todoist-to-md/releases)
+[![Downloads](https://static.pepy.tech/badge/todoist-to-md/month)](https://pepy.tech/project/todoist-to-md)
+![GitHub CI Status](https://github.com/iloveitaly/todoist-to-md/actions/workflows/build_and_publish.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Convert a Todoist task to markdown format.
+# Todoist Task to Markdown
 
-This tool was completely AI generated. I didn't write any code although I did use [some fancy rules](https://github.com/iloveitaly/llm-ide-prompts)
-and a [package starter template](https://github.com/iloveitaly/python-package-template).
+Convert a Todoist task (and its comments) into a clean, readable Markdown format. Perfect for archiving tasks or migrating notes.
+
+This tool was completely AI-generated. I didn't write any code, although I did use [some fancy rules](https://github.com/iloveitaly/llm-ide-prompts) and a [package starter template](https://github.com/iloveitaly/python-package-template).
+
+## Installation
+
+```bash
+uv tool install todoist-to-md
+```
 
 ## Usage
 
-1. Set your Todoist API token:
+1. **Set your Todoist API token:**
 
-```bash
-export TODOIST_API_KEY="your_api_token_here"
-```
+   You can find your API token in the [Todoist Integrations settings](https://todoist.com/app/settings/integrations).
 
-1. Run the tool with a Todoist task URL:
+   ```bash
+   export TODOIST_API_KEY="your_api_token_here"
+   ```
 
-```bash
-todoist-to-markdown https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
-```
+2. **Run the tool with a Todoist task URL:**
 
-The tool will output the task and its comments in markdown format.
+   ```bash
+   todoist-to-md https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
+   ```
+
+3. **Save output to a file:**
+
+   ```bash
+   todoist-to-md https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ --output task.md
+   ```
 
 ## Example Output
 
 ```markdown
 # Family Notes
 
-Project: Personal
+**Original:** https://app.todoist.com/app/task/family-notes-6WHj3H6XmQ6F5HJJ
+**Project:** Personal
+**Section:** Planning
+
+## Description
 
 Review the family photos and provide feedback on composition and lighting.
 
-## 2025-06-13
+## Comments
+
+### 2025-06-13 10:30
 
 Initial thoughts: The composition looks good but we need better lighting.
 
-## 2025-06-14
+### 2025-06-14 15:45
 
 Added some suggestions for the next photo session.
 ```
+
+---
+
+*This project was created from [iloveitaly/python-package-template](https://github.com/iloveitaly/python-package-template)*
