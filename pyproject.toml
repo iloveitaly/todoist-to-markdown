@@ -15,7 +15,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["todoist-api-python", "click", "whenever"]
 authors = [{ name = "Michael Bianco", email = "mike@mikebian.co" }]
-urls = { "Repository" = "https://github.com/iloveitaly/todoist-to-md" }
+urls = { "Repository" = "https://github.com/iloveitaly/todoist-to-markdown" }
 
 # additional packaging information: https://packaging.python.org/en/latest/specifications/core-metadata/#license
 [project.scripts]

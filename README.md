@@ -1,6 +1,6 @@
-[![Release Notes](https://img.shields.io/github/release/iloveitaly/todoist-to-md)](https://github.com/iloveitaly/todoist-to-md/releases)
+[![Release Notes](https://img.shields.io/github/release/iloveitaly/todoist-to-markdown)](https://github.com/iloveitaly/todoist-to-markdown/releases)
 [![Downloads](https://static.pepy.tech/badge/todoist-to-md/month)](https://pepy.tech/project/todoist-to-md)
-![GitHub CI Status](https://github.com/iloveitaly/todoist-to-md/actions/workflows/build_and_publish.yml/badge.svg)
+![GitHub CI Status](https://github.com/iloveitaly/todoist-to-markdown/actions/workflows/build_and_publish.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Todoist Task to Markdown
