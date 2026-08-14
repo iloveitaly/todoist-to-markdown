@@ -1,9 +1,9 @@
 import logging
 import os
 import re
-from typing import Optional
 
 import click
+import httpx
 from todoist_api_python.api import TodoistAPI
 from whenever import Instant
 
@@ -44,8 +44,8 @@ def format_task_markdown(
     task,
     comments: list,
     url: str,
-    project_name: Optional[str] = None,
-    section_name: Optional[str] = None,
+    project_name: str | None = None,
+    section_name: str | None = None,
 ) -> str:
     """Format task and comments into a markdown string."""
     lines = [f"# {task.content}", ""]
@@ -78,7 +78,7 @@ def format_task_markdown(
             try:
                 instant = Instant.parse_iso(comment.posted_at)
                 comment_date = instant.format_iso()[:16].replace("T", " ")
-            except Exception as e:
+            except ValueError as e:
                 log.debug("date parsing error for comment: %s", str(e))
                 comment_date = (
                     str(comment.posted_at) if comment.posted_at else "unknown date"
@@ -94,7 +94,7 @@ def format_task_markdown(
 @click.command()
 @click.argument("url")
 @click.option("--output", "-o", type=click.Path(), help="Output markdown to a file")
-def main(url: str, output: Optional[str] = None):
+def main(url: str, output: str | None = None):
     """Convert Todoist task to markdown format."""
     api_token = os.environ.get("TODOIST_API_KEY")
     if not api_token:
@@ -115,7 +115,7 @@ def main(url: str, output: Optional[str] = None):
             try:
                 project = api.get_project(task.project_id)
                 project_name = project.name
-            except Exception:
+            except httpx.HTTPError:
                 log.warning(f"Could not fetch project name for ID {task.project_id}")
 
         # Fetch section name
@@ -124,7 +124,7 @@ def main(url: str, output: Optional[str] = None):
             try:
                 section = api.get_section(task.section_id)
                 section_name = section.name
-            except Exception:
+            except httpx.HTTPError:
                 log.warning(f"Could not fetch section name for ID {task.section_id}")
 
         # Fetch comments
@@ -152,9 +152,11 @@ def main(url: str, output: Optional[str] = None):
         else:
             click.echo(markdown)
 
-    except Exception as e:
+    except click.ClickException:
+        raise
+    except (ValueError, httpx.HTTPError, OSError) as e:
         log.error(f"Failed to process task: {e}")
-        raise click.ClickException(str(e))
+        raise click.ClickException(str(e)) from e
 
 
 if __name__ == "__main__":
