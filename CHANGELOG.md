@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/iloveitaly/todoist-to-markdown/compare/v0.1.3...v0.1.4) (2026-08-18)
+
+
+### Bug Fixes
+
+* make ruff 0.16 Dependabot bump pass lint ([#41](https://github.com/iloveitaly/todoist-to-markdown/issues/41)) ([bd282da](https://github.com/iloveitaly/todoist-to-markdown/commit/bd282da1abf40cc261d758c6dfbc1412b571bb04))
+* point GitHub badges and package URL at todoist-to-markdown ([e84eae2](https://github.com/iloveitaly/todoist-to-markdown/commit/e84eae2db61ed4873ed42d37ebd63ef237135f45))
+
 ## [0.1.3](https://github.com/iloveitaly/todoist-to-markdown/compare/v0.1.2...v0.1.3) (2026-02-25)
 
 
