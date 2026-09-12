@@ -11,7 +11,7 @@ from .version import __version__
 
 # Set up standard logging
 logging.basicConfig(
-    level=os.environ.get("LOG_LEVEL", "INFO").upper(),
+    level=os.environ.get("LOG_LEVEL", "WARNING").upper(),
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 

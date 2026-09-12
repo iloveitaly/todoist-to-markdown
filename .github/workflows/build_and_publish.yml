@@ -23,6 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: jdx/mise-action@v4.3.0
+        with:
+          bootstrap: true
+          bootstrap_args: --update --yes
       - uses: iloveitaly/github-action-direnv-load-and-mask@master
       - run: uv sync
       - run: just lint
@@ -39,7 +42,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: jdx/mise-action@v4.3.0
-      - run: mise use python@${{ matrix.python-version }}
+        with:
+          bootstrap: true
+          bootstrap_args: --update --yes
+      - run: mise use --path mise.toml python@${{ matrix.python-version }}
+      - run: uv venv --clear
       - uses: iloveitaly/github-action-direnv-load-and-mask@master
       - run: uv sync
       - name: Check CLI
@@ -75,6 +82,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: jdx/mise-action@v4.3.0
+        with:
+          bootstrap: true
+          bootstrap_args: --update --yes
       - uses: iloveitaly/github-action-direnv-load-and-mask@master
       - run: uv sync
       - run: uv build
