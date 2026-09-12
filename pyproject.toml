@@ -13,13 +13,23 @@ keywords = [
 ]
 readme = "README.md"
 requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
 dependencies = ["todoist-api-python", "click", "whenever"]
 authors = [{ name = "Michael Bianco", email = "mike@mikebian.co" }]
 urls = { "Repository" = "https://github.com/iloveitaly/todoist-to-markdown" }
 
+
 # additional packaging information: https://packaging.python.org/en/latest/specifications/core-metadata/#license
 [project.scripts]
 todoist-to-md = "todoist_to_md:main"
+
 
 [build-system]
 requires = ["uv_build>=0.11.0,<0.12"]
@@ -37,6 +47,7 @@ dev = [
     "coverage>=7.13.4",
     "pytest-cov>=7.0.0",
     "covdefaults>=2.3.0",
+    "beautiful-traceback>=1.0.2; python_version >= '3.12'",
 ]
 
 [tool.pyright]
@@ -51,6 +62,3 @@ source = ["todoist_to_md"]
 
 [tool.coverage.report]
 fail_under = 50
-
-[tool.ruff]
-extend-exclude = ["playground.py", "playground/"]

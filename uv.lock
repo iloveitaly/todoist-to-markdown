@@ -1,6 +1,10 @@
 version = 1
 revision = 3
 requires-python = ">=3.11"
+resolution-markers = [
+    "python_full_version >= '3.12'",
+    "python_full_version < '3.12'",
+]
 
 [[package]]
 name = "annotated-types"
@@ -22,6 +26,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/61/cc/a381afa6efea9f496eff839d4a6a1aed3bfafc7b3ab4b0d1b243a12573dd/anyio-4.14.2.tar.gz", hash = "sha256:cfa139f3ed1a23ee8f88a145ddb5ac7605b8bbfd8592baacd7ce3d8bb4313c7f", size = 260176, upload-time = "2026-07-12T20:29:07.082Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/da/35/f2287558c17e29fafc8ef3daf819bb9834061cfa43bff8014f7df7f63bdc/anyio-4.14.2-py3-none-any.whl", hash = "sha256:9f505dda5ac9f0c8309b5e8bd445a8c2bf7246f3ce950121e45ea15bc41d1494", size = 125813, upload-time = "2026-07-12T20:29:05.763Z" },
+]
+
+[[package]]
+name = "beautiful-traceback"
+version = "1.0.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama" },
+    { name = "pytest-plugin-utils" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/53/95/9a03eff8708999c6fa176634600ae5a556fe8843cdcdbeb90c45e34f0fd9/beautiful_traceback-1.0.2.tar.gz", hash = "sha256:1f8e2705dc50f46034af317fe10a52f0afbeba9a3e129ea22d357a12b514c9d8", size = 20887, upload-time = "2026-09-04T11:20:04.881Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2c/7d/2d9c4a7d4835534518a9212130cf311a24903a26ccb99fbddcbbc905d115/beautiful_traceback-1.0.2-py3-none-any.whl", hash = "sha256:d4eb9a1dabdb13eafbd569f9de0e542b8679f72f4290bb7b0658469ff1bae366", size = 25931, upload-time = "2026-09-04T11:20:04.002Z" },
 ]
 
 [[package]]
@@ -350,6 +367,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pytest-plugin-utils"
+version = "0.4.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7d/da/c91592e11f2837a12d4696b4004d15dc67502e44163cd9478a961386eb77/pytest_plugin_utils-0.4.0.tar.gz", hash = "sha256:d40e100d88ae15599ed67780531e502a159e23c3484795bbf4e45c0468520cc4", size = 8188, upload-time = "2026-05-04T16:43:23.753Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7e/aa/282377aa29a1eb83dd3e39433b29eabdba295ce9b8ae7f2332b1d6b64f63/pytest_plugin_utils-0.4.0-py3-none-any.whl", hash = "sha256:06c786c7bbaaabad6ad1d513d731511f3feb829514ec0978be41a43351de5017", size = 9277, upload-time = "2026-05-04T16:43:24.46Z" },
+]
+
+[[package]]
 name = "ruff"
 version = "0.16.6"
 source = { registry = "https://pypi.org/simple" }
@@ -400,6 +426,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "beautiful-traceback", marker = "python_full_version >= '3.12'" },
     { name = "covdefaults" },
     { name = "coverage" },
     { name = "pyright", extra = ["nodejs"] },
@@ -417,6 +444,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "beautiful-traceback", marker = "python_full_version >= '3.12'", specifier = ">=1.0.2" },
     { name = "covdefaults", specifier = ">=2.3.0" },
     { name = "coverage", specifier = ">=7.13.4" },
     { name = "pyright", extras = ["nodejs"], specifier = ">=1.1.408" },

@@ -7,6 +7,8 @@ import httpx
 from todoist_api_python.api import TodoistAPI
 from whenever import Instant
 
+from .version import __version__
+
 # Set up standard logging
 logging.basicConfig(
     level=os.environ.get("LOG_LEVEL", "INFO").upper(),
@@ -92,6 +94,7 @@ def format_task_markdown(
 
 
 @click.command()
+@click.version_option(__version__, "-V", "--version")
 @click.argument("url")
 @click.option("--output", "-o", type=click.Path(), help="Output markdown to a file")
 def main(url: str, output: str | None = None):
