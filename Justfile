@@ -2,13 +2,17 @@
 set shell := ["zsh", "-euo", "pipefail", "-c"]
 set script-interpreter := ["zsh", "-euo", "pipefail"]
 
+# Ensure gh commands never trigger an interactive pager
+export GH_PAGER := "cat"
+
 # Set up the Python environment, done automatically for you when using direnv
 setup:
     [ -f .env ] || cp .env-example .env
-    [ -d .venv ] || uv venv
-    uv sync
+    uv venv --allow-existing && uv sync
     # Calling the CLI tool installs a .pth file into the virtualenv for nice tracebacks
     uv run beautiful-traceback
+    # Keep IDE-specific rule files in sync with instructions.md
+    if [ -f instructions.md ]; then uvx llm-ide-rules explode; fi
     @echo "activate: source ./.venv/bin/activate"
 
 # Upgrade tool versions, python dependencies, and optionally bump pyproject.toml constraints
@@ -56,10 +60,23 @@ lint FILES=".":
         uv run pyright {{FILES}} || exit_code=$?
     fi
 
+    # Scan git history for secrets. `just gitleaks_baseline` writes .gitleaksignore.
+    gitleaks git --no-banner --redact=20 || exit_code=$?
+
     if [ $exit_code -ne 0 ]; then
         echo "One or more linting checks failed"
         exit 1
     fi
+
+# Write current gitleaks findings to .gitleaksignore
+[script]
+gitleaks_baseline:
+    tmp=$(mktemp)
+    # gitleaks exits 1 when it finds secrets; that's expected while baselining
+    gitleaks git --no-banner --redact=20 --report-format json --report-path="$tmp" || true
+    jq -r '(. // [])[] | .Fingerprint' "$tmp" | sort > .gitleaksignore
+    rm -f "$tmp"
+    echo "Wrote $(wc -l < .gitleaksignore | tr -d ' ') fingerprints to .gitleaksignore"
 
 # Automatically fix linting errors
 lint-fix:
@@ -146,8 +163,7 @@ github_last_build_failure:
     if [[ "$CONCLUSION" == "success" ]]; then
         echo "latest build succeeded"
     else
-        # Force cat pager to output logs directly to terminal
-        GH_PAGER=cat gh run view "$ID" --log-failed
+        gh run view "$ID" --log-failed
     fi
 
 # Rerun only failed jobs for the last failed 'build' workflow for the current branch
