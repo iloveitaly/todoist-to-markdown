@@ -1,4 +1,5 @@
 import os
+from datetime import UTC, datetime
 from unittest.mock import Mock, patch
 
 import pytest
@@ -84,6 +85,39 @@ class TestFormatTaskMarkdown:
         assert "## Comments" in result
         assert "### 2025-06-13 10:30" in result
         assert "First comment" in result
+
+    def test_format_task_with_datetime_comment(self):
+        # todoist-api-python v4 returns posted_at as datetime, not str
+        task = Mock()
+        task.content = "Test Task"
+        task.project_id = "project123"
+        task.section_id = None
+        task.description = "Task description"
+
+        comment1 = Mock()
+        comment1.posted_at = datetime(2026, 8, 17, 13, 47, 8, 965000, tzinfo=UTC)
+        comment1.content = "Datetime comment"
+
+        result = format_task_markdown(task, [comment1], "https://example.com")
+
+        assert "### 2026-08-17 13:47" in result
+        assert "Datetime comment" in result
+
+    def test_format_task_with_none_posted_at(self):
+        task = Mock()
+        task.content = "Test Task"
+        task.project_id = None
+        task.section_id = None
+        task.description = None
+
+        comment1 = Mock()
+        comment1.posted_at = None
+        comment1.content = "No date comment"
+
+        result = format_task_markdown(task, [comment1], "https://example.com")
+
+        assert "### unknown date" in result
+        assert "No date comment" in result
 
 
 class TestMainCLI:

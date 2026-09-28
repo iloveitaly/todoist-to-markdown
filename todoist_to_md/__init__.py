@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+from datetime import UTC, datetime
 
 import click
 import httpx
@@ -77,13 +78,22 @@ def format_task_markdown(
         lines.append("## Comments")
         for comment in comments:
             lines.append("")
-            try:
-                instant = Instant.parse_iso(comment.posted_at)
-                comment_date = instant.format_iso()[:16].replace("T", " ")
-            except ValueError as e:
-                log.debug("date parsing error for comment: %s", str(e))
+            posted_at = comment.posted_at
+            if isinstance(posted_at, datetime):
+                dt = posted_at
+                if dt.tzinfo is not None:
+                    dt = dt.astimezone(UTC)
+                comment_date = dt.strftime("%Y-%m-%d %H:%M")
+            elif isinstance(posted_at, str):
+                try:
+                    instant = Instant.parse_iso(posted_at)
+                    comment_date = instant.format_iso()[:16].replace("T", " ")
+                except ValueError as e:
+                    log.debug("date parsing error for comment: %s", str(e))
+                    comment_date = posted_at
+            else:
                 comment_date = (
-                    str(comment.posted_at) if comment.posted_at else "unknown date"
+                    str(posted_at) if posted_at is not None else "unknown date"
                 )
 
             lines.append(f"### {comment_date}")
