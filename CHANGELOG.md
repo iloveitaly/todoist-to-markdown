@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/iloveitaly/todoist-to-markdown/compare/v0.2.0...v0.2.1) (2026-09-29)
+
+
+### Bug Fixes
+
+* support datetime objects for comment posted_at timestamp ([480565d](https://github.com/iloveitaly/todoist-to-markdown/commit/480565dc6a9a46b40fde7ba97f59ab7dfa795a34))
+
 ## [0.2.0](https://github.com/iloveitaly/todoist-to-markdown/compare/v0.1.3...v0.2.0) (2026-09-12)
 
 
